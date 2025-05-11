@@ -9,6 +9,6 @@ export const signUp = async (userData: ISignUpUser) => {
 };
 
 export const signIn = async (userData: ISignInUser) => {
-  const response = await api.post("/api/v1/auth/signin", userData); // Adjust endpoint if needed
+  const response = await api.post("/api/v1/auth/login", userData); // Adjust endpoint if needed
   return response.data;
 };

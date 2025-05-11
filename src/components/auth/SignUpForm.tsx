@@ -9,10 +9,17 @@ import { ISignUpUser } from "@/type/ISignUp";
 import { signUp } from "@/services/auth.service";
 import toast from "react-hot-toast";
 import Button from "../ui/button/Button";
+import { useAuth } from "@/context/AuthContext";
+import { User } from "@/type/IUser";
+import { useRouter } from "next/navigation";
+import { useErrorToast } from "@/hooks/useErrorToast";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string>("Student");
+  const { login } = useAuth();
+  const router = useRouter();
+  const { showError } = useErrorToast();
   const [formData, setFormData] = useState<ISignUpUser>({
     name: "",
     email: "",
@@ -44,16 +51,24 @@ export default function SignUpForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('this is test');
     if (!validateForm()) return;
 
     try {
-      console.log("formData=", formData);
-      await signUp(formData);
-      toast.success("Signup successful!");
+      const res = await signUp(formData);
+      if (res.statusCode == 201) {
+        const data = res.data.user;
+        const token = res.data.accessToken;
+        const newUser: User = {
+          name: data.name,
+          email: data.email,
+          userType: data.userType
+        }
+        toast.success("Signup successful!");
+        login(token, newUser);
+        router.push("/admin/dashboard");
+      }
     } catch (err) {
-      console.error("Signup error:", err);
-      toast.error("Signup failed.");
+      showError(err);
     }
   };
 
