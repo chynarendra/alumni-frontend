@@ -5,14 +5,14 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import {
+  CalenderIcon,
   ChevronDownIcon,
+  EnvelopeIcon,
   GridIcon,
   HorizontaLDots,
   ListIcon,
-  PageIcon,
-  UserCircleIcon,
+  TaskIcon,
 } from "../icons/index";
-import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
   name: string;
@@ -31,6 +31,21 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     name: "News",
     path: "/admin/news",
+  },
+  {
+    icon: <CalenderIcon />,
+    name: "Events",
+    path: "/admin/events",
+  },
+  {
+    icon: <TaskIcon />,
+    name: "Jobs",
+    path: "/admin/jobs",
+  },
+  {
+    icon: <EnvelopeIcon />,
+    name: "Contacts",
+    path: "/admin/contacts",
   }
 ];
 

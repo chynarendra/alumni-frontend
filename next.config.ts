@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: ["images.unsplash.com", "example.com","source.unsplash.com"], // add more domains as needed
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,

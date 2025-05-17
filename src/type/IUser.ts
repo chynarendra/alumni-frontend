@@ -3,3 +3,8 @@ export interface User {
   email: string;
   userType:string;
 }
+
+export interface IChangePassword{
+  oldPassword:string;
+  newPassword:string;
+} 

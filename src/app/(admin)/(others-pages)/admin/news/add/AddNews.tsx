@@ -1,7 +1,7 @@
 "use client";
 import CustomFileUpload from "@/components/ui/CustomFileUpload";
 import CustomInput from "@/components/ui/CustomInput";
-import CustomTextArea from "@/components/ui/CustomTextArea";
+import TextEditorInput from "@/components/ui/TextEditorInput";
 import { ArrowRightIcon } from "@/icons";
 import { createNews } from "@/services/news.service";
 import { INewsCreate, INewsError } from "@/type/INews";
@@ -17,7 +17,7 @@ const AddNews = () => {
     title: '',
     content: '',
     image: null,
-    summary:''
+    summary: ''
   });
 
   const handleValidation = (data: INewsCreate) => {
@@ -45,7 +45,7 @@ const AddNews = () => {
       const form = new FormData();
       form.append("title", formData.title);
       form.append("content", formData.content);
-      form.append("summary",formData.content)
+      form.append("summary", formData.title)
       if (formData.image) {
         form.append("image", formData.image);
       }
@@ -94,20 +94,23 @@ const AddNews = () => {
             required
           />
 
-          <CustomTextArea
-            label="Description"
-            value={formData.content}
-            onChange={(value) => setFormData({ ...formData, content: value })}
-            error={error?.content}
-            required
-          />
+          <div className="mb-4">
+            <TextEditorInput
+              label="Description"
+              value={formData.content}
+              onChange={(value) => setFormData({ ...formData, content: value })}
+              required
+            />
+          </div>
 
-          <CustomFileUpload
-            label="Image"
-            onFileChange={(file) =>
-              setFormData((prev) => ({ ...prev, image: file }))
-            }
-          />
+          <div className="mt-8">
+            <CustomFileUpload
+              label="Image"
+              onFileChange={(file) =>
+                setFormData((prev) => ({ ...prev, image: file }))
+              }
+            />
+          </div>
 
           <button
             type="submit"

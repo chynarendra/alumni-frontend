@@ -1,4 +1,4 @@
-import { getNews } from '@/services/news.service';
+import { deleteNewsData, getNews } from '@/services/news.service';
 import { INews } from '@/type/INews'
 import React, { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
@@ -26,6 +26,23 @@ const useNews = () => {
         }
     }, []);
 
+    const deleteNews = useCallback(async (id: string) => {
+        try {
+            setIsLoading(true);
+            const res = await deleteNewsData(id);
+            if (res.statusCode == 201 || res.statusCode == 200) {
+                toast.success("News deleted successfully.");
+                await fetchNews();
+            } else {
+                toast.error(res.message);
+            }
+            setIsLoading(false);
+        } catch (err) {
+            showError(err);
+            setIsLoading(false);
+        }
+    }, []);
+
     useEffect(() => {
         fetchNews();
     }, [fetchNews])
@@ -33,7 +50,8 @@ const useNews = () => {
     return {
         news,
         setNews,
-        isLoading
+        isLoading,
+        deleteNews
     }
 }
 

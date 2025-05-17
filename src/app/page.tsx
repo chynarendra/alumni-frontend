@@ -1,15 +1,10 @@
-'use client'
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import React from 'react'
+import Home from './Home'
 
-const Page = () => {
-  const router = useRouter()
-
-  useEffect(() => {
-    router.push('/signin')
-  }, [router])
-
-  return null
+const page = () => {
+  return (
+    <Home />
+  )
 }
 
-export default Page
+export default page

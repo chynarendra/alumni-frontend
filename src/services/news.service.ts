@@ -14,3 +14,30 @@ export const createNews = async (data:FormData) => {
   });
   return response.data;
 };
+
+export const updateNews = async (id:string,data:FormData) => {
+  const response = await api.put("/api/v1/news/"+id,data,{
+    headers:{
+        "Content-Type": "multipart/form-data"
+    }
+  });
+  return response.data;
+};
+
+export const deleteNewsData = async (id:string) => {
+  const response = await api.delete("/api/v1/news/"+id,{
+    headers:{
+        "Content-Type": "application/json"
+    }
+  });
+  return response.data;
+};
+
+export const getNewsById = async (id:string) => {
+  const response = await api.get("/api/v1/news/"+id,{
+    headers:{
+        "Content-Type": "application/json"
+    }
+  });
+  return response.data;
+};
