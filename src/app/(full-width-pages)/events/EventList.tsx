@@ -4,27 +4,11 @@ import { useRouter } from "next/navigation";
 import HeaderMenus from "@/components/frontend/HeaderMenus";
 import HeroSection from "@/components/frontend/HeroSection";
 import Footer from "@/components/frontend/Footer";
-
-const events = [
-    {
-        id: "1",
-        title: "React Conference",
-        startDate: "2025-06-10",
-        endDate: "2025-06-12",
-        location: "New York",
-    },
-    {
-        id: "2",
-        title: "JavaScript Meetup",
-        startDate: "2025-07-05",
-        endDate: "2025-07-05",
-        location: "San Francisco",
-    },
-    // Add more events or fetch from API
-];
+import useEvents from "@/hooks/events/useEvents";
 
 const EventList = () => {
     const router = useRouter();
+    const { events, isLoading } = useEvents();
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-800">
@@ -40,11 +24,11 @@ const EventList = () => {
             {/* Jobs */}
             <section id="jobs" className="py-16 container mx-auto px-4">
                 <div className="grid gap-4">
-                    {events.map((event) => (
+                    {!isLoading ? events.map((event) => (
                         <div
-                            key={event.id}
+                            key={event._id}
                             className="p-4 border rounded-lg shadow hover:shadow-md cursor-pointer transition"
-                            onClick={() => router.push(`/events/${event.id}`)}
+                            onClick={() => router.push(`/events/${event._id}`)}
                         >
                             <h2 className="text-xl font-semibold">{event.title}</h2>
                             <p className="text-gray-600">
@@ -53,8 +37,9 @@ const EventList = () => {
                             </p>
                             <p className="text-gray-600">📍 {event.location}</p>
                         </div>
-                    ))}
+                    )) : "Loading..."}
                 </div>
+                {events.length <= 0 && <p className="text-gray-600">Data are not available</p>}
             </section>
 
             {/* Footer */}

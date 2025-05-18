@@ -5,27 +5,11 @@ import Image from "next/image";
 import HeaderMenus from "@/components/frontend/HeaderMenus";
 import HeroSection from "@/components/frontend/HeroSection";
 import Footer from "@/components/frontend/Footer";
-
-const newsList = [
-  {
-    id: "1",
-    title: "Next.js 14 Released with Major Performance Improvements",
-    imageUrl: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "2",
-    title: "React Conf 2025 Announced",
-    imageUrl: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "3",
-    title: "Tech Companies Investing in AI Training",
-    imageUrl: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
-  },
-];
+import useNews from "@/hooks/news/useNews";
 
 const NewsList = () => {
   const router = useRouter();
+  const { news, isLoading } = useNews();
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
@@ -33,19 +17,19 @@ const NewsList = () => {
       <HeaderMenus />
 
       {/* Hero Section */}
-      <HeroSection title="Latest News" description="Stay updated with the latest tech news" />
+      <HeroSection title="Latest News" description="Stay updated with the latest news" />
 
       {/* News List */}
       <section className="py-16 container mx-auto px-4">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {newsList.map((news) => (
+          {!isLoading ? news.map((news) => (
             <div
-              key={news.id}
+              key={news._id}
               className="border rounded-lg shadow hover:shadow-md cursor-pointer transition overflow-hidden"
-              onClick={() => router.push(`/news/${news.id}`)}
+              onClick={() => router.push(`/news/${news._id}`)}
             >
               <Image
-                src={news.imageUrl}
+                src={''}
                 alt={news.title}
                 width={400}
                 height={200}
@@ -55,8 +39,9 @@ const NewsList = () => {
                 <h2 className="text-lg font-semibold">{news.title}</h2>
               </div>
             </div>
-          ))}
+          )) : "Loading..."}
         </div>
+        {news.length <= 0 && <p className="text-gray-600">Data are not available</p>}
       </section>
 
       {/* Footer */}
