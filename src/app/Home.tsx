@@ -8,40 +8,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowRightIcon } from "@/icons";
+import useEvents from "@/hooks/events/useEvents";
 
 const Home = () => {
     const router = useRouter();
     const { news, isLoading } = useNews();
-    const events = [
-        {
-            _id: "1",
-            title: "React Conference",
-            startDate: "2025-06-10",
-            endDate: "2025-06-12",
-            location: "New York",
-        },
-        {
-            _id: "2",
-            title: "JavaScript Meetup",
-            startDate: "2025-07-05",
-            endDate: "2025-07-05",
-            location: "San Francisco",
-        },
-        {
-            _id: "3",
-            title: "React Conference",
-            startDate: "2025-06-10",
-            endDate: "2025-06-12",
-            location: "New York",
-        },
-        {
-            _id: "4",
-            title: "JavaScript Meetup",
-            startDate: "2025-07-05",
-            endDate: "2025-07-05",
-            location: "San Francisco",
-        },
-    ];
+    const { events, isEventLoading } = useEvents();
     return (
         <div className="min-h-screen bg-gray-50 text-gray-800">
             {/* Header */}
@@ -99,7 +71,7 @@ const Home = () => {
                                 onClick={() => router.push(`/news/${news._id}`)}
                             >
                                 <Image
-                                    src={'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80'}
+                                    src={process.env.NEXT_PUBLIC_API_BASE_URL + '/' + news.imageUrl}
                                     alt={news.title}
                                     width={400}
                                     height={200}

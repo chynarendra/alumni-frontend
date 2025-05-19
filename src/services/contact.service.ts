@@ -2,7 +2,7 @@ import { IContactCreate } from "@/type/IContact";
 import api from "./api";
 
 export const getContacts = async () => {
-  const response = await api.get("/api/v1/contacts");
+  const response = await api.get("/api/v1/contacts/admin");
   return response.data;
 };
 

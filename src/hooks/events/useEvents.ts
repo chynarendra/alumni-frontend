@@ -4,16 +4,16 @@ import { useErrorToast } from '../useErrorToast';
 import { deleteJobData, getJobs } from '@/services/jobs.service';
 import { formatToYearMonthDay } from '@/utils/helper';
 import { IEvent } from '@/type/IEvent';
-import { getEvents } from '@/services/event.service';
+import { deleteEventData, getEvents } from '@/services/event.service';
 
 const useEvents = () => {
     const [events, setEvents] = useState<IEvent[]>([]);
     const { showError } = useErrorToast();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isEventLoading, setIsEventLoading] = useState(false);
 
     const fetchEvents = useCallback(async () => {
         try {
-            setIsLoading(true);
+            setIsEventLoading(true);
 
             const res = await getEvents();          // <-- your API call
             if (res.statusCode === 200 || res.statusCode === 201) {
@@ -39,24 +39,24 @@ const useEvents = () => {
         } catch (err) {
             showError(err);
         } finally {
-            setIsLoading(false);
+            setIsEventLoading(false);
         }
         }, []);
 
     const deleteEvent = useCallback(async (id: string) => {
         try {
-            setIsLoading(true);
-            const res = await deleteJobData(id);
+            setIsEventLoading(true);
+            const res = await deleteEventData(id);
             if (res.statusCode == 201 || res.statusCode == 200) {
                 toast.success("Events deleted successfully.");
                 await fetchEvents();
             } else {
                 toast.error(res.message);
             }
-            setIsLoading(false);
+            setIsEventLoading(false);
         } catch (err) {
             showError(err);
-            setIsLoading(false);
+            setIsEventLoading(false);
         }
     }, []);
 
@@ -67,7 +67,7 @@ const useEvents = () => {
     return {
         events,
         setEvents,
-        isLoading,
+        isEventLoading,
         deleteEvent
     }
 }

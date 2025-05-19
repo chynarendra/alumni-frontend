@@ -22,7 +22,7 @@ const News = () => {
             label: "Image",
             render: (row: INews) => (
                 <img
-                    src={row.imageUrl}
+                    src={process.env.NEXT_PUBLIC_API_BASE_URL+'/'+row.imageUrl}
                     alt="News"
                     style={{
                         width: 100,

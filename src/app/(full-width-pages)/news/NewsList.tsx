@@ -29,7 +29,7 @@ const NewsList = () => {
               onClick={() => router.push(`/news/${news._id}`)}
             >
               <Image
-                src={''}
+                src={process.env.NEXT_PUBLIC_API_BASE_URL + '/' + news.imageUrl}
                 alt={news.title}
                 width={400}
                 height={200}

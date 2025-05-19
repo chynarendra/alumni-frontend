@@ -49,7 +49,7 @@ const NewsDetail = () => {
 
             {newsItem && <div className="container mx-auto px-4 py-12 max-w-4xl">
                 <img
-                    src={newsItem.imageUrl}
+                    src={process.env.NEXT_PUBLIC_API_BASE_URL + '/' + newsItem.imageUrl}
                     alt={newsItem.title}
                     className="rounded-lg shadow mb-6 w-full object-cover h-64"
                 />

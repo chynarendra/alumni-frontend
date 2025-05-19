@@ -25,8 +25,19 @@ const Events = () => {
       accessor: "title" as const,
     },
     {
-      label: "Location",
-      accessor: "location" as const,
+      label: "Image",
+      render: (row: IEvent) => (
+        row && <img
+          src={process.env.NEXT_PUBLIC_API_BASE_URL+'/'+row.imageUrl}
+          alt="Event"
+          style={{
+            width: 100,
+            height: 60,
+            objectFit: "cover",
+            borderRadius: 4,
+          }}
+        />
+      )
     },
     {
       label: "Start Date",

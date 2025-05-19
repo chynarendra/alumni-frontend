@@ -1,28 +1,43 @@
 "use client";
-import React from "react";
-import { useRouter } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import HeaderMenus from "@/components/frontend/HeaderMenus";
 import Footer from "@/components/frontend/Footer";
 import Image from "next/image";
 import HeroSection from "@/components/frontend/HeroSection";
-
-const event = {
-    id: "1",
-    title: "React Conference",
-    description:
-        "Join the largest React conference with top speakers from the industry. Learn, network, and grow your skills!",
-    startDate: "2025-06-10",
-    endDate: "2025-06-12",
-    location: "New York",
-    isVirtual: false,
-    meetingLink: "",
-    maxAttendees: 200,
-    imageUrl:
-        "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
-};
+import { getEventById } from "@/services/event.service";
+import toast from "react-hot-toast";
+import { useErrorToast } from "@/hooks/useErrorToast";
+import { IEvent } from "@/type/IEvent";
+import DOMPurify from "dompurify";
 
 const EventDetail = () => {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { id } = useParams<{ id: string }>();
+    const { showError } = useErrorToast();
+    const [event, setEvent] = useState<IEvent | null>(null);
+
+    const fetchEvent = useCallback(async () => {
+        try {
+            setIsLoading(true);
+            const res = await getEventById(id);
+            if (res.statusCode === 200 || res.statusCode === 201) {
+                const data = res.data.event;
+                setEvent(data);
+            } else {
+                toast.error(res.message);
+            }
+        } catch (err) {
+            showError(err);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [id]);
+
+    useEffect(() => {
+        if (id) fetchEvent();
+    }, [fetchEvent, id]);
 
     const handleBook = () => {
         router.push("/signin");
@@ -34,20 +49,22 @@ const EventDetail = () => {
 
             <HeroSection
                 title="Event"
-                description="Discover and book events"
+                url="/events"
+                description={event ? event.title : "Discover and book events"}
             />
 
-            <main className="container mx-auto px-4 py-10 max-w-4xl">
+            {event && <main className="container mx-auto px-4 py-10 max-w-4xl">
                 {/* Banner Image */}
-                <div className="mb-6 rounded overflow-hidden">
+                {event.imageUrl != '' && <div className="mb-6 rounded overflow-hidden">
                     <Image
-                        src={event.imageUrl}
+                        src={process.env.NEXT_PUBLIC_API_BASE_URL + '/' + event.imageUrl}
                         alt={event.title}
                         width={1200}
                         height={500}
                         className="rounded-lg object-cover w-full h-64"
                     />
                 </div>
+                }
 
                 {/* Title */}
                 <h1 className="text-3xl font-bold mb-2">{event.title}</h1>
@@ -81,7 +98,10 @@ const EventDetail = () => {
 
                 {/* Description */}
                 <div className="prose max-w-none mb-10">
-                    <p>{event.description}</p>
+                    <div
+                    className="prose prose-gray max-w-none text-lg leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.description) }}
+                />
                 </div>
 
                 {/* Book Button */}
@@ -92,6 +112,7 @@ const EventDetail = () => {
                     Book Event
                 </button>
             </main>
+            }
 
             <Footer />
         </div>

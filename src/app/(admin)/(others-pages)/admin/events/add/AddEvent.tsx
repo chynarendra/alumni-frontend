@@ -93,7 +93,7 @@ const AddEvent = () => {
       form.append("meetingLink", formData.meetingLink);
       form.append("maxAttendees", String(formData.maxAttendees));
       if (formData.imageUrl) {
-        form.append("imageUrl", formData.imageUrl);
+        form.append("image", formData.imageUrl);
       }
 
       await createEvent(form);

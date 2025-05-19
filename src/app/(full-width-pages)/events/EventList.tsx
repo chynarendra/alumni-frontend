@@ -8,7 +8,7 @@ import useEvents from "@/hooks/events/useEvents";
 
 const EventList = () => {
     const router = useRouter();
-    const { events, isLoading } = useEvents();
+    const { events, isEventLoading } = useEvents();
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-800">
@@ -24,7 +24,7 @@ const EventList = () => {
             {/* Jobs */}
             <section id="jobs" className="py-16 container mx-auto px-4">
                 <div className="grid gap-4">
-                    {!isLoading ? events.map((event) => (
+                    {!isEventLoading ? events.map((event) => (
                         <div
                             key={event._id}
                             className="p-4 border rounded-lg shadow hover:shadow-md cursor-pointer transition"
