@@ -40,6 +40,7 @@ const EventDetail = () => {
     }, [fetchEvent, id]);
 
     const handleBook = () => {
+        localStorage.setItem("book_event_id", id)
         router.push("/signin");
     };
 
@@ -99,9 +100,9 @@ const EventDetail = () => {
                 {/* Description */}
                 <div className="prose max-w-none mb-10">
                     <div
-                    className="prose prose-gray max-w-none text-lg leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.description) }}
-                />
+                        className="prose prose-gray max-w-none text-lg leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.description) }}
+                    />
                 </div>
 
                 {/* Book Button */}

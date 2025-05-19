@@ -53,8 +53,13 @@ export default function SignInForm() {
           userType: data.userType
         }
         login(token, newUser);
-        router.push("/admin/dashboard");
-      }else{
+        const bookEventId = localStorage.getItem("book_event_id");
+        if (bookEventId) {
+          router.push("/admin/events/view/" + bookEventId);
+        } else {
+          router.push("/admin/dashboard");
+        }
+      } else {
         toast.error(res.message);
       }
     } catch (err) {

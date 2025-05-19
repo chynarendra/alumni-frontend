@@ -2,6 +2,7 @@
 import CustomDatePickerInput from "@/components/ui/CustomDatePickerInput";
 import CustomFileUpload from "@/components/ui/CustomFileUpload";
 import CustomInput from "@/components/ui/CustomInput";
+import CustomTimePickerInput from "@/components/ui/CustomTimePickerInput";
 import TextEditorInput from "@/components/ui/TextEditorInput";
 import { useErrorToast } from "@/hooks/useErrorToast";
 import { ArrowRightIcon } from "@/icons";
@@ -24,6 +25,8 @@ const EditEvent = () => {
     endDate: '',
     location: '',
     maxAttendees: '',
+    startTime: '',
+    endTime: ''
   });
   const [formData, setFormData] = useState<IEventCreate>({
     title: "",
@@ -34,7 +37,9 @@ const EditEvent = () => {
     isVirtual: false,
     meetingLink: "",
     maxAttendees: 0,
-    imageUrl: null
+    imageUrl: null,
+    startTime: '',
+    endTime: ''
   });
 
   const fetchEvent = useCallback(async () => {
@@ -52,7 +57,9 @@ const EditEvent = () => {
           isVirtual: data.isVirtual,
           meetingLink: data.meetingLink,
           maxAttendees: data.maxAttendees,
-          imageUrl: data.imageUrl,
+          imageUrl: null,
+          startTime: data.startTime ?? '',
+          endTime: data.endTime ?? ''
         });
       } else {
         toast.error(res.message);
@@ -76,6 +83,8 @@ const EditEvent = () => {
       endDate: '',
       location: '',
       maxAttendees: '',
+      startTime: '',
+      endTime: ''
     };
 
     if (!data.title.trim()) {
@@ -96,6 +105,16 @@ const EditEvent = () => {
       errors.endDate = 'End date cannot be before start date';
     }
 
+    if (!data.startTime.trim()) errors.startTime = 'Start time is required';
+    if (!data.endTime.trim()) {
+      errors.endTime = 'End time is required';
+    } else if (
+      data.startDate === data.endDate &&   // only compare times when on same day
+      data.endTime < data.startTime
+    ) {
+      errors.endTime = 'End time cannot be before start time';
+    }
+
     if (!data.location.trim()) {
       errors.location = 'Location is required';
     }
@@ -110,6 +129,8 @@ const EditEvent = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    console.log("form data=",formData);
 
     const validationErrors = handleValidation(formData);
     const hasErrors = Object.values(validationErrors).some(Boolean);
@@ -127,6 +148,9 @@ const EditEvent = () => {
       form.append("isVirtual", String(formData.isVirtual));
       form.append("meetingLink", formData.meetingLink);
       form.append("maxAttendees", String(formData.maxAttendees));
+      form.append("startTime", String(formData.startTime));
+      form.append("endTime", String(formData.endTime));
+
       if (formData.imageUrl) {
         form.append("image", formData.imageUrl);
       }
@@ -181,12 +205,30 @@ const EditEvent = () => {
                 onChange={(val) => setFormData({ ...formData, startDate: val })}
                 required
               />
+
+              <CustomTimePickerInput
+                label="Start Time"
+                value={formData.startTime}
+                onChange={(val) => setFormData({ ...formData, startTime: val })}
+                error={error.startTime}
+                required
+              />
+
               <CustomDatePickerInput
                 label="End Date"
                 value={formData.endDate}
                 onChange={(val) => setFormData({ ...formData, endDate: val })}
                 required
               />
+
+              <CustomTimePickerInput
+                label="End Time"
+                value={formData.endTime}
+                onChange={(val) => setFormData({ ...formData, endTime: val })}
+                error={error.endTime}
+                required
+              />
+
               <CustomInput
                 type="number"
                 label="Max Attendees"

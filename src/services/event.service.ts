@@ -40,3 +40,21 @@ export const getEventById = async (id:string) => {
   });
   return response.data;
 };
+
+export const getEventAttendees = async (id:string) => {
+  const response = await api.get(`/api/v1/events/${id}/attendees`,{
+    headers:{
+        "Content-Type": "application/json"
+    }
+  });
+  return response.data;
+};
+
+export const bookEvent = async (id:string) => {
+  const response = await api.post(`/api/v1/events/${id}/book`,{
+    headers:{
+        "Content-Type": "application/json"
+    }
+  });
+  return response.data;
+};

@@ -9,7 +9,7 @@ import useEvents from "@/hooks/events/useEvents";
 import { IEvent } from "@/type/IEvent";
 
 const Events = () => {
-  const { events, isLoading, deleteEvent } = useEvents();
+  const { events, isEventLoading, deleteEvent } = useEvents();
   const { user } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
@@ -28,7 +28,7 @@ const Events = () => {
       label: "Image",
       render: (row: IEvent) => (
         row && <img
-          src={process.env.NEXT_PUBLIC_API_BASE_URL+'/'+row.imageUrl}
+          src={process.env.NEXT_PUBLIC_API_BASE_URL + '/' + row.imageUrl}
           alt="Event"
           style={{
             width: 100,
@@ -48,13 +48,16 @@ const Events = () => {
       accessor: "endDate" as const,
     },
     {
-      label: "Type",
-      render: (row: IEvent) => (row.isVirtual ? "Virtual" : "In-Person"),
-    },
-    {
       label: "Actions",
       render: (row: IEvent) => (
         <div className="flex gap-2">
+
+          <button
+            className="text-blue-600 hover:underline"
+            onClick={() => router.push(`/admin/events/view/${row._id}`)}
+          >
+            Book
+          </button>
 
           <button
             className="text-blue-600 hover:underline"
@@ -98,7 +101,7 @@ const Events = () => {
       </div>
 
       <div className="overflow-x-auto">
-        {!isLoading ? (
+        {!isEventLoading ? (
           <CustomDataTable data={events} columns={eventColumns} />
         ) : (
           <p>Loading...</p>

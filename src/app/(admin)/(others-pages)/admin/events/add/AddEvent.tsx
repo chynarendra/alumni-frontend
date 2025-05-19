@@ -10,6 +10,7 @@ import { ArrowRightIcon } from "@/icons";
 import { IEventCreate, IEventError } from "@/type/IEvent";
 import { createEvent } from "@/services/event.service";
 import CustomFileUpload from "@/components/ui/CustomFileUpload";
+import CustomTimePickerInput from "@/components/ui/CustomTimePickerInput";
 
 const AddEvent = () => {
   const router = useRouter();
@@ -21,6 +22,8 @@ const AddEvent = () => {
     endDate: '',
     location: '',
     maxAttendees: '',
+    startTime: '',
+    endTime: ''
   });
   const [formData, setFormData] = useState<IEventCreate>({
     title: '',
@@ -31,7 +34,9 @@ const AddEvent = () => {
     isVirtual: false,
     meetingLink: '',
     maxAttendees: 0,
-    imageUrl: null
+    imageUrl: null,
+    startTime: '',
+    endTime: ''
   });
 
   const handleValidation = (data: IEventCreate): IEventError => {
@@ -42,6 +47,8 @@ const AddEvent = () => {
       endDate: '',
       location: '',
       maxAttendees: '',
+      startTime: '',
+      endTime: ''
     };
 
     if (!data.title.trim()) {
@@ -60,6 +67,16 @@ const AddEvent = () => {
       errors.endDate = 'End date is required';
     } else if (data.endDate < data.startDate) {
       errors.endDate = 'End date cannot be before start date';
+    }
+
+    if (!data.startTime.trim()) errors.startTime = 'Start time is required';
+    if (!data.endTime.trim()) {
+      errors.endTime = 'End time is required';
+    } else if (
+      data.startDate === data.endDate &&   // only compare times when on same day
+      data.endTime < data.startTime
+    ) {
+      errors.endTime = 'End time cannot be before start time';
     }
 
     if (!data.location.trim()) {
@@ -92,6 +109,9 @@ const AddEvent = () => {
       form.append("isVirtual", String(formData.isVirtual));
       form.append("meetingLink", formData.meetingLink);
       form.append("maxAttendees", String(formData.maxAttendees));
+      form.append("startTime",String(formData.startTime));
+      form.append("endTime",String(formData.endTime));
+
       if (formData.imageUrl) {
         form.append("image", formData.imageUrl);
       }
@@ -153,12 +173,28 @@ const AddEvent = () => {
             error={error.startDate}
           />
 
+          <CustomTimePickerInput
+            label="Start Time"
+            value={formData.startTime}
+            onChange={(val) => setFormData({ ...formData, startTime: val })}
+            error={error.startTime}
+            required
+          />
+
           <CustomDatePickerInput
             label="End Date"
             value={formData.endDate}
             onChange={(value) => setFormData({ ...formData, endDate: value })}
             required
             error={error.endDate}
+          />
+
+          <CustomTimePickerInput
+            label="End Time"
+            value={formData.endTime}
+            onChange={(val) => setFormData({ ...formData, endTime: val })}
+            error={error.endTime}
+            required
           />
 
           <CustomInput

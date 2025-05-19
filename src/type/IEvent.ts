@@ -9,6 +9,8 @@ export interface IEvent{
     meetingLink:string;
     maxAttendees:number;
     imageUrl:string;
+    startTime:string;
+    endTime:string;
 }
 
 export interface IEventCreate{
@@ -21,6 +23,8 @@ export interface IEventCreate{
     meetingLink:string;
     maxAttendees:number;
     imageUrl:File | null;
+    startTime:string;
+    endTime:string;
 }
 
 export interface IEventError{
@@ -30,4 +34,17 @@ export interface IEventError{
     endDate:string;
     location:string;
     maxAttendees:string;
+    startTime:string;
+    endTime:string;
+}
+
+export interface IAttendee {
+  id: string;
+  userType: "Student" | "Instructor" | "Guest" | string;
+  registeredAt: string;          // ISO‑8601
+  userId: {
+    id: string;
+    email: string;
+    name: string;
+  };
 }
