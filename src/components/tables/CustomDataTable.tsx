@@ -40,7 +40,7 @@ export default function CustomDataTable<T>({
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, rowIndex) => (
+          {data && data.length > 0 && data.map((row, rowIndex) => (
             <TableRow key={rowIndex}>
               {columns.map((col, colIndex) => (
                 <TableCell key={colIndex}>
