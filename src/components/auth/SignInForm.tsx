@@ -3,16 +3,23 @@ import Checkbox from "@/components/form/input/Checkbox";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
+import { useAuth } from "@/context/AuthContext";
+import { useErrorToast } from "@/hooks/useErrorToast";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import { signIn } from "@/services/auth.service";
 import { ISignInUser } from "@/type/ISignIn";
+import { User } from "@/type/IUser";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const { login } = useAuth();
+  const router = useRouter();
+  const { showError } = useErrorToast();
   const [formData, setFormData] = useState<ISignInUser>({
     email: "",
     password: "",
@@ -35,13 +42,28 @@ export default function SignInForm() {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const toastId = toast.loading("Signing in...");
     try {
-      console.log("signin data==",formData);
-      await signIn(formData);
-      toast.success("Signed in successfully", { id: toastId });
-    } catch (err: any) {
-      toast.error("Invalid credentials", { id: toastId });
+      const res = await signIn(formData);
+      if (res.statusCode == 201 || res.statusCode == 200) {
+        const data = res.data.user;
+        const token = res.data.accessToken;
+        const newUser: User = {
+          name: data.name,
+          email: data.email,
+          userType: data.userType
+        }
+        login(token, newUser);
+        const bookEventId = localStorage.getItem("book_event_id");
+        if (bookEventId) {
+          router.push("/admin/events/view/" + bookEventId);
+        } else {
+          router.push("/admin/dashboard");
+        }
+      } else {
+        toast.error(res.message);
+      }
+    } catch (err) {
+      showError(err);
     }
   };
 
@@ -104,12 +126,12 @@ export default function SignInForm() {
                       Keep me logged in
                     </span>
                   </div>
-                  <Link
+                  {/* <Link
                     href="/reset-password"
                     className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                   >
                     Forgot password?
-                  </Link>
+                  </Link> */}
                 </div>
                 <div>
                   <Button className="w-full" size="sm" type="submit">
