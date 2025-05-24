@@ -47,6 +47,14 @@ const Jobs = () => {
       label: "Actions",
       render: (row: IJob) => (
         <div className="flex gap-2">
+
+          <button
+            className="text-blue-600 hover:underline"
+            onClick={() => router.push(`/admin/jobs/view/${row._id}`)}
+          >
+            View
+          </button>
+
           {user?.userType == UserType.Alumni && <><button
             className="text-blue-600 hover:underline"
             onClick={() => router.push(`/admin/jobs/edit/${row._id}`)}

@@ -47,7 +47,6 @@ const EventDetail = () => {
             const res = await bookEvent(id);
             if (res.statusCode === 200) {
                 toast.success("Your booking completed successfully");
-                await fetchAttendees();
             } else {
                 toast.error(res.message);
             }
@@ -60,6 +59,7 @@ const EventDetail = () => {
         } finally {
             setIsLoading(false);
         }
+        return;
     };
 
     useEffect(() => {
@@ -95,6 +95,7 @@ const EventDetail = () => {
                 {["details", "attendees"].map((tab) => (
                     <button
                         key={tab}
+                        type="button"
                         onClick={() => setActiveTab(tab as any)}
                         className={`px-4 py-2 -mb-px border-b-2 transition ${activeTab === tab
                             ? "border-blue-600 font-semibold text-blue-600"
@@ -108,7 +109,7 @@ const EventDetail = () => {
 
             {/* DETAILS TAB */}
             {activeTab === "details" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow-md rounded-lg p-6 space-y-4">
                     <Detail label="Title" value={event.title} />
                     <Detail label="Location" value={event.location} />
                     <Detail label="Start Date" value={fmtDate(event.startDate)} />
@@ -143,10 +144,11 @@ const EventDetail = () => {
                     <div className="md:col-span-2 flex mt-4">
                         <button
                             onClick={handleBook}
+                            type="button"
                             className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
                         >
                             <InfoIcon className="h-5 w-5" />
-                            Book Event
+                            {isLoading ? "Submitting..." : "Book Event"}
                         </button>
                     </div>
                 </div>
@@ -155,7 +157,7 @@ const EventDetail = () => {
             {/* ATTENDEES TAB */}
             {activeTab === "attendees" && (
                 attendees.length ? (
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto bg-white shadow-md rounded-lg p-6 space-y-4">
                         <table className="min-w-full divide-y divide-gray-200 text-sm">
                             <thead className="bg-gray-100">
                                 <tr>

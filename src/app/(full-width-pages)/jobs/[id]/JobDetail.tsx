@@ -5,7 +5,7 @@ import HeroSection from '@/components/frontend/HeroSection'
 import { useErrorToast } from '@/hooks/useErrorToast';
 import { getJobById } from '@/services/jobs.service';
 import { IJob } from '@/type/IJob';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import DOMPurify from "dompurify";
@@ -15,6 +15,8 @@ const JobDetail = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { showError } = useErrorToast();
     const [job, setJob] = useState<IJob | null>(null);
+    const router = useRouter();
+
     const fetchJobs = useCallback(async (id: string) => {
         try {
             setIsLoading(true);
@@ -74,6 +76,21 @@ const JobDetail = () => {
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description) }}
                         />
                     </div>
+
+                    {/* Apply Now Button */}
+                    <div className="mt-6">
+                        <button
+                            className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
+                            onClick={() => {
+                                router.push('/signin');
+                                localStorage.setItem("job_id", id);
+                            }}
+                        >
+                            {"Apply Now"}
+                        </button>
+                    </div>
+
+
                 </div>) : ("Loading....")
                 }
             </section>

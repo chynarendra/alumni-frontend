@@ -41,3 +41,21 @@ export const getJobById = async (id:string) => {
   });
   return response.data;
 };
+
+export const getJobApplications = async (id:string) => {
+  const response = await api.get("/api/v1/jobs/"+id+"/applicantList",{
+    headers:{
+        "Content-Type": "application/json"
+    }
+  });
+  return response.data;
+};
+
+export const applyJob = async (data:FormData,id:string) => {
+  const response = await api.post("/api/v1/jobs/"+id+"/apply",data,{
+    headers:{
+        "Content-Type": "multipart/form-data"
+    }
+  });
+  return response.data;
+};

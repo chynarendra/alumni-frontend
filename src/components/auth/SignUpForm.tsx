@@ -17,6 +17,7 @@ import { useErrorToast } from "@/hooks/useErrorToast";
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string>("Student");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
   const { showError } = useErrorToast();
@@ -54,6 +55,7 @@ export default function SignUpForm() {
     if (!validateForm()) return;
 
     try {
+      setIsSubmitting(true);
       const res = await signUp(formData);
       if (res.statusCode == 201) {
         const data = res.data.user;
@@ -65,10 +67,20 @@ export default function SignUpForm() {
         }
         toast.success("Signup successful!");
         login(token, newUser);
-        router.push("/admin/dashboard");
+        const bookEventId = localStorage.getItem("book_event_id");
+        const jobId = localStorage.getItem("job_id");
+        if (bookEventId) {
+          router.push("/admin/events/view/" + bookEventId);
+        } else if (jobId) {
+          router.push("/admin/jobs/view/" + jobId);
+        } else {
+          router.push("/admin/dashboard");
+        }
       }
     } catch (err) {
       showError(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -174,7 +186,7 @@ export default function SignUpForm() {
               {/* Submit Button */}
               <div>
                 <Button className="w-full" size="sm" type="submit">
-                  Sign Up
+                  {isSubmitting ? "Submitting..." : "Sign Up"}
                 </Button>
               </div>
             </div>

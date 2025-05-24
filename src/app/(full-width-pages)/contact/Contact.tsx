@@ -46,9 +46,19 @@ const Contact = () => {
         if (!data.subject.trim()) {
             errors.subject = "Subject is required";
         }
+
+        if (data.subject.length <= 4) {
+            errors.subject = "Subject is must be greater than 4 character";
+        }
+
         if (!data.message.trim()) {
             errors.message = "Message is required";
         }
+
+        if (data.message.length <= 10) {
+            errors.message = "Message must be at least 10 characters long";
+        }
+
         setError(errors);
         return errors;
     };

@@ -17,6 +17,7 @@ import { toast } from "react-hot-toast";
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
   const { showError } = useErrorToast();
@@ -43,6 +44,7 @@ export default function SignInForm() {
     if (!validateForm()) return;
 
     try {
+      setIsSubmitting(true);
       const res = await signIn(formData);
       if (res.statusCode == 201 || res.statusCode == 200) {
         const data = res.data.user;
@@ -54,8 +56,11 @@ export default function SignInForm() {
         }
         login(token, newUser);
         const bookEventId = localStorage.getItem("book_event_id");
+        const jobId = localStorage.getItem("job_id");
         if (bookEventId) {
           router.push("/admin/events/view/" + bookEventId);
+        } else if (jobId) {
+          router.push("/admin/jobs/view/" + jobId);
         } else {
           router.push("/admin/dashboard");
         }
@@ -64,6 +69,8 @@ export default function SignInForm() {
       }
     } catch (err) {
       showError(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -135,7 +142,7 @@ export default function SignInForm() {
                 </div>
                 <div>
                   <Button className="w-full" size="sm" type="submit">
-                    Sign in
+                    {isSubmitting ? "Submitting..." : "Sign in"}
                   </Button>
                 </div>
               </div>
