@@ -61,6 +61,7 @@ export default function SignUpForm() {
         const data = res.data.user;
         const token = res.data.accessToken;
         const newUser: User = {
+          _id: data._id,
           name: data.name,
           email: data.email,
           userType: data.userType

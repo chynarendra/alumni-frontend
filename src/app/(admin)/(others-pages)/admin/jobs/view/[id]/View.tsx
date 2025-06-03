@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import DOMPurify from 'dompurify';
 import ApplyJob from './ApplyJob';
 import Applications from './Applications';
+import { useAuth } from '@/context/AuthContext';
 
 const View = () => {
     const { id } = useParams<{ id: string }>();
@@ -15,6 +16,7 @@ const View = () => {
     const { showError } = useErrorToast();
     const [job, setJob] = useState<IJob | null>(null);
     const [activeTab, setActiveTab] = useState<'details' | 'apply'>('details');
+    const { user } = useAuth();
 
     const fetchJobs = useCallback(async (id: string) => {
         try {
@@ -72,7 +74,7 @@ const View = () => {
                                     />
                                 </div>
 
-                                <ApplyJob id={job._id} />
+                                {user?.userType == "Student" && <ApplyJob id={job._id} />}
                             </div>
                         )}
 

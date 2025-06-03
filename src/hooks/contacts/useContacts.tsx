@@ -15,7 +15,7 @@ const useContacts = () => {
 
             const res = await getContacts();
             if (res.statusCode === 200 || res.statusCode === 201) {
-                const data = res.data.contacts;
+                const data = res.data;
                 setContacts(data);
             } else {
                 toast.error(res.message);

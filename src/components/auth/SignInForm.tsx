@@ -50,6 +50,7 @@ export default function SignInForm() {
         const data = res.data.user;
         const token = res.data.accessToken;
         const newUser: User = {
+          _id:data.id,
           name: data.name,
           email: data.email,
           userType: data.userType

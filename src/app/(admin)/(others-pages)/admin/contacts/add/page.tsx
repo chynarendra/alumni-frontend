@@ -1,10 +1,9 @@
-"use client"
 import React from 'react'
-import Contacts from './Contacts'
+import AddContact from '../AddContact'
 
 const page = () => {
   return (
-    <Contacts />
+    <AddContact />
   )
 }
 

@@ -1,3 +1,4 @@
+import { useAuth } from '@/context/AuthContext';
 import { useErrorToast } from '@/hooks/useErrorToast';
 import { getJobApplications } from '@/services/jobs.service';
 import { IJobApplication } from '@/type/IJobApplication';
@@ -9,6 +10,7 @@ const Applications = ({ id }: { id: string }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [applications, setApplications] = useState<IJobApplication[]>([]);
     const { showError } = useErrorToast();
+    const { user } = useAuth();
 
     const fetchJobs = useCallback(async (id: string) => {
         try {
@@ -50,22 +52,43 @@ const Applications = ({ id }: { id: string }) => {
                             </thead>
                             <tbody>
                                 {applications.map((app, index) => (
-                                    <tr key={index} className="hover:bg-gray-50">
-                                        <td className="border px-4 py-2">{index + 1}</td>
-                                        <td className="border px-4 py-2">{app.applicant.name}</td>
-                                        <td className="border px-4 py-2">{new Date(app.applicationDate).toLocaleDateString()}</td>
-                                        <td className="border px-4 py-2">
-                                            <Link
-                                                href={app.resume ? process.env.NEXT_PUBLIC_API_BASE_URL + '/' + app.resume : ''}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 underline"
-                                            >
-                                                View CV
-                                            </Link>
-                                        </td>
-                                    </tr>
+                                    <>
+                                        {user?.userType == "Student" ? (app.applicant._id == user._id &&
+                                            <tr key={index} className="hover:bg-gray-50">
+                                                <td className="border px-4 py-2">{index + 1}</td>
+                                                <td className="border px-4 py-2">{app.applicant.name}</td>
+                                                <td className="border px-4 py-2">{new Date(app.applicationDate).toLocaleDateString()}</td>
+                                                <td className="border px-4 py-2">
+                                                    <Link
+                                                        href={app.resume ? process.env.NEXT_PUBLIC_API_BASE_URL + '/' + app.resume : ''}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-blue-600 underline"
+                                                    >
+                                                        View CV
+                                                    </Link>
+                                                </td>
+                                            </tr>) : (
+                                            <tr key={index} className="hover:bg-gray-50">
+                                                <td className="border px-4 py-2">{index + 1}</td>
+                                                <td className="border px-4 py-2">{app.applicant.name}</td>
+                                                <td className="border px-4 py-2">{new Date(app.applicationDate).toLocaleDateString()}</td>
+                                                <td className="border px-4 py-2">
+                                                    <Link
+                                                        href={app.resume ? process.env.NEXT_PUBLIC_API_BASE_URL + '/' + app.resume : ''}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-blue-600 underline"
+                                                    >
+                                                        View CV
+                                                    </Link>
+                                                </td>
+                                            </tr>
+                                        )
+                                        }
+                                    </>
                                 ))}
+
                             </tbody>
                         </table>
                     </div>

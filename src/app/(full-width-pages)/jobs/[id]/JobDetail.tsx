@@ -9,11 +9,13 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import DOMPurify from "dompurify";
+import { useAuth } from '@/context/AuthContext';
 
 const JobDetail = () => {
     const { id } = useParams<{ id: string }>();
     const [isLoading, setIsLoading] = useState(false);
     const { showError } = useErrorToast();
+    const { user } = useAuth();
     const [job, setJob] = useState<IJob | null>(null);
     const router = useRouter();
 
@@ -89,7 +91,6 @@ const JobDetail = () => {
                             {"Apply Now"}
                         </button>
                     </div>
-
 
                 </div>) : ("Loading....")
                 }

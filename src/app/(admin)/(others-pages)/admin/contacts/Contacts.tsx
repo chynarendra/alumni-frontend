@@ -4,9 +4,12 @@ import CustomDataTable from "@/components/tables/CustomDataTable";
 import { useRouter } from "next/navigation";
 import useContacts from "@/hooks/contacts/useContacts";
 import { IContact } from "@/type/IContact";
+import { PlusIcon } from "@/icons";
+import { useAuth } from "@/context/AuthContext";
 
 const Contacts = () => {
   const { contacts, isLoading } = useContacts();
+  const { user } = useAuth();
   const router = useRouter();
 
   const contactsColumns = [
@@ -29,21 +32,7 @@ const Contacts = () => {
     {
       label: "Message",
       accessor: "message" as const,
-    },
-    {
-      label: "Actions",
-      render: (row: IContact) => (
-        <div className="flex gap-2">
-
-          <button
-            className="text-blue-600 hover:underline"
-            onClick={() => router.push(`/admin/events/edit/${row._id}`)}
-          >
-            View
-          </button>
-        </div>
-      ),
-    },
+    }
   ];
 
   return (
@@ -51,6 +40,14 @@ const Contacts = () => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-bold">Contacts</h1>
+          {user?.userType == "Student" && <button
+            className="flex items-center gap-1 text-white bg-green-600 hover:bg-green-700 px-2 py-0.5 rounded-md"
+            onClick={() => router.push('/admin/contacts/add')}
+          >
+            Add
+            <PlusIcon className="h-5 w-5 mt-2" />
+          </button>
+          }
         </div>
       </div>
 
