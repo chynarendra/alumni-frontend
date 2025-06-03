@@ -738,3 +738,15 @@ span.flatpickr-weekday,
   opacity: 0.8;
   cursor: grabbing; /* Changes the cursor to indicate dragging */
 }
+
+/* globals.css */
+.__toast-container {
+  z-index: 9999 !important;
+}
+
+/* This is the default class used by react-hot-toast */
+div[class*='Toaster'] {
+  z-index: 9999 !important;
+}
+
+

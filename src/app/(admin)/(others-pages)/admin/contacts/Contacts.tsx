@@ -6,11 +6,18 @@ import useContacts from "@/hooks/contacts/useContacts";
 import { IContact } from "@/type/IContact";
 import { PlusIcon } from "@/icons";
 import { useAuth } from "@/context/AuthContext";
+import { ConfirmModal } from "@/components/ui/modal/ConfirmModal";
 
 const Contacts = () => {
-  const { contacts, isLoading } = useContacts();
+  const { contacts, isLoading, deleteContact } = useContacts();
   const { user } = useAuth();
   const router = useRouter();
+  const [selectedId, setSelectedId] = useState<string>('');
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleDelete = async () => {
+    await deleteContact(selectedId);
+  };
 
   const contactsColumns = [
     {
@@ -32,6 +39,23 @@ const Contacts = () => {
     {
       label: "Message",
       accessor: "message" as const,
+    },
+    {
+      label: "Actions",
+      render: (row: IContact) => (
+        <div className="flex gap-2">
+          {user?.userType == "Student" && <button
+            className="text-red-600 hover:underline"
+            onClick={() => {
+              setSelectedId(row._id);
+              setOpen(true);
+            }}
+          >
+            Delete
+          </button>
+          }
+        </div>
+      ),
     }
   ];
 
@@ -58,6 +82,13 @@ const Contacts = () => {
           <p>Loading...</p>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={open}
+        onCancel={() => setOpen(false)}
+        onConfirm={handleDelete}
+        message="Delete this item permanently?"
+      />
     </div>
   );
 };

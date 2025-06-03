@@ -18,11 +18,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.className} dark:bg-gray-900`}>
+        <Toaster
+          position="bottom-center"
+          reverseOrder={false}
+          toastOptions={{
+            style: {
+              zIndex: 9999
+            },
+          }}
+        />
         <AuthProvider>
           <ThemeProvider>
             <SidebarProvider>
               {children}
-              <Toaster position="top-right" reverseOrder={false} />
             </SidebarProvider>
           </ThemeProvider>
         </AuthProvider>
